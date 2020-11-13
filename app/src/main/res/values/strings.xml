@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MsOgCardWar</string>
+
+    <string name="menu_title">Card War!</string>
+    <string name="menu_start">Start Game</string>
+    <string name="menu_about">About</string>
 </resources>
