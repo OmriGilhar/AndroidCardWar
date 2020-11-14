@@ -4,4 +4,5 @@
     <string name="menu_title">Card War!</string>
     <string name="menu_start">Start Game</string>
     <string name="menu_about">About</string>
+    <string name="menu_card_image">Card Image</string>
 </resources>
