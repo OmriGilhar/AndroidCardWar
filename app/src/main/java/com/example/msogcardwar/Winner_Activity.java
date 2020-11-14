@@ -3,18 +3,25 @@ package com.example.msogcardwar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class Winner_Activity extends AppCompatActivity {
 
-    private TextView winner_title;
-    private int winner = -1;
+    private TextView winner_lbl_winner_name;
+    private ImageView winner_img_winner_logo;
+    private TextView winner_lbl_winner_score;
+    private int winner_score;
+    private int winner_img_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.winner_activity);
-        this.winner = getIntent().getIntExtra("winner", -1);
+        this.winner_score = getIntent().getIntExtra("winner_score", -1);
+        this.winner_img_id = getIntent().getIntExtra("winner_image_id", -1);
+
 
         findViews();
         initViews();
@@ -22,10 +29,17 @@ public class Winner_Activity extends AppCompatActivity {
     }
 
     private void findViews() {
-        winner_title = findViewById(R.id.winner_LBL_winner_title);
+        winner_lbl_winner_name = findViewById(R.id.winner_LBL_winner_title);
+        winner_img_winner_logo = findViewById(R.id.winner_IMG_winner);
+        winner_lbl_winner_score = findViewById(R.id.winner_LBL_description);
     }
 
     private void initViews() {
-        winner_title.setText("The Winner is Player Number " + this.winner);
+        String winner_score_title = "Your Score is :" +this.winner_score;
+        Log.println(Log.DEBUG, "winner", winner_score_title);
+        winner_lbl_winner_name.setText(R.string.winner_title);
+        winner_lbl_winner_score.setText(winner_score_title);
+        winner_img_winner_logo.setImageResource(winner_img_id);
+
     }
 }

@@ -1,21 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Winner_Activity">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/winner_spooky"
+        android:orientation="vertical"
+        android:gravity="center">
         <TextView
             android:id="@+id/winner_LBL_winner_title"
             android:layout_width="wrap_content"
-            android:text="asd"
-            android:layout_height="wrap_content"
-            tools:layout_editor_absoluteX="160dp"
-            tools:layout_editor_absoluteY="183dp" />
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Winner!!!"
+            android:textColor="@color/white"
+            android:textSize="50sp"/>
 
+        <ImageView
+            android:id="@+id/winner_IMG_winner"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:src="@drawable/monster"/>
+
+        <TextView
+            android:id="@+id/winner_LBL_description"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="Score: 11"
+            android:textColor="@color/white"
+            android:textSize="30sp"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

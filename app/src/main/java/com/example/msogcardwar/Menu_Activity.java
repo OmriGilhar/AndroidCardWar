@@ -11,7 +11,6 @@ import android.widget.Button;
 public class Menu_Activity extends AppCompatActivity {
 
     private Button start_game_btn;
-    private Button about_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +23,6 @@ public class Menu_Activity extends AppCompatActivity {
 
     private void find_views() {
         start_game_btn = findViewById(R.id.startGame_BTN_menu);
-        about_btn = findViewById(R.id.about_BTN_menu);
     }
 
     private void init_views() {
@@ -34,17 +32,6 @@ public class Menu_Activity extends AppCompatActivity {
                 openGameView();
             }
         });
-
-        about_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openAboutView();
-            }
-        });
-    }
-
-    private void openAboutView() {
-        Log.println(Log.DEBUG, "menu", "Open About");
     }
 
     private void openGameView() {
