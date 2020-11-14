@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MsOgCardWar">
         <activity android:name=".Game_Activity"></activity>
-        <activity android:name=".MenuActivity">
+        <activity android:name=".Menu_Activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
