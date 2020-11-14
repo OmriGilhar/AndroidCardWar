@@ -67,11 +67,21 @@ public class Game_Activity extends AppCompatActivity {
         outState.putSerializable(PLAYER_ONE_STACK, player1_stack);
         outState.putSerializable(PLAYER_TWO_STACK, player2_stack);
 
-        outState.putString(PLAYER_ONE_CURRENT_CARD_IMG, current_player_one_card.getKey());
-        outState.putInt(PLAYER_ONE_CURRENT_CARD_VALUE, current_player_one_card.getValue());
+        // If someone spin the phone when no card as been played yet
+        if(current_player_one_card != null ){
+            outState.putString(PLAYER_ONE_CURRENT_CARD_IMG, current_player_one_card.getKey());
+            outState.putInt(PLAYER_ONE_CURRENT_CARD_VALUE, current_player_one_card.getValue());
+            outState.putString(PLAYER_TWO_CURRENT_CARD_IMG, current_player_two_card.getKey());
+            outState.putInt(PLAYER_TWO_CURRENT_CARD_VALUE, current_player_two_card.getValue());
+        } else {
+            outState.putString(PLAYER_ONE_CURRENT_CARD_IMG, getResources().getString(R.string.path_to_default_card));
+            outState.putInt(PLAYER_ONE_CURRENT_CARD_VALUE, 0);
+            outState.putString(PLAYER_TWO_CURRENT_CARD_IMG, getResources().getString(R.string.path_to_default_card));
+            outState.putInt(PLAYER_TWO_CURRENT_CARD_VALUE, 0);
+        }
 
-        outState.putString(PLAYER_TWO_CURRENT_CARD_IMG, current_player_two_card.getKey());
-        outState.putInt(PLAYER_TWO_CURRENT_CARD_VALUE, current_player_two_card.getValue());
+
+
 
         outState.putInt(PLAYER_ONE_SCORE, player_one_score);
         outState.putInt(PLAYER_TWO_SCORE, player_two_score);
