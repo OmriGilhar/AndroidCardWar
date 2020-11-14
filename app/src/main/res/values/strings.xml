@@ -10,4 +10,8 @@
     <string name="game_btn_play">Play!</string>
     <string name="p1_card_description">Player One Card Image</string>
     <string name="p2_card_description">Player Two Card Image</string>
+
+    <string name="winner_title">!! WINNER !!</string>
+    <string name="winner_score_title">Your Score </string>
+
 </resources>

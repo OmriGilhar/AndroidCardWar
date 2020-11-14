@@ -12,6 +12,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Stack;
 import java.util.Random;
 
@@ -19,6 +23,10 @@ public class Game_Activity extends AppCompatActivity {
     private final String PLAYER_ONE_SCORE = "P1_SCORE";
     private final String PLAYER_TWO_SCORE = "P2_SCORE";
     private final String WINNER = "WINNER";
+    private final String PLAYER_ONE_CURRENT_CARD_IMG = "P1_CARD_IMG";
+    private final String PLAYER_ONE_CURRENT_CARD_VALUE = "P1_CARD_VALUE";
+    private final String PLAYER_TWO_CURRENT_CARD_IMG = "P2_CARD_IMG";
+    private final String PLAYER_TWO_CURRENT_CARD_VALUE = "P2_CARD_VALUE";
     private final String PLAYER_ONE_STACK = "P1_STACK";
     private final String PLAYER_TWO_STACK = "P2_STACK";
     private TextView game_lbl_scorePlayer1;
@@ -26,9 +34,13 @@ public class Game_Activity extends AppCompatActivity {
     private TextView game_lbl_scorePlayer2;
     private ImageView game_img_card_player2;
     private ImageButton game_btn_play;
-    private final Stack<CardEntry<String, Integer>> all_card_stack = new Stack<>();
+    private final ArrayList<CardEntry<String, Integer>> all_card_stack = new ArrayList<>();
     private Stack<CardEntry<String, Integer>> player1_stack = new Stack<>();
     private Stack<CardEntry<String, Integer>> player2_stack = new Stack<>();
+
+    private CardEntry<String, Integer> current_player_one_card;
+    private CardEntry<String, Integer> current_player_two_card;
+
     private int player_one_score = 0;
     private int player_two_score = 0;
     private int winner = -1;
@@ -45,6 +57,7 @@ public class Game_Activity extends AppCompatActivity {
         if(savedInstanceState != null) {
             getScoresFromInstance(savedInstanceState);
             getStacksFromInstance(savedInstanceState);
+            getPlayersCardFromInstance(savedInstanceState);
         }
     }
 
@@ -53,9 +66,29 @@ public class Game_Activity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putSerializable(PLAYER_ONE_STACK, player1_stack);
         outState.putSerializable(PLAYER_TWO_STACK, player2_stack);
+
+        outState.putString(PLAYER_ONE_CURRENT_CARD_IMG, current_player_one_card.getKey());
+        outState.putInt(PLAYER_ONE_CURRENT_CARD_VALUE, current_player_one_card.getValue());
+
+        outState.putString(PLAYER_TWO_CURRENT_CARD_IMG, current_player_two_card.getKey());
+        outState.putInt(PLAYER_TWO_CURRENT_CARD_VALUE, current_player_two_card.getValue());
+
         outState.putInt(PLAYER_ONE_SCORE, player_one_score);
         outState.putInt(PLAYER_TWO_SCORE, player_two_score);
         outState.putInt(WINNER, winner);
+    }
+
+    private void getPlayersCardFromInstance(Bundle savedInstanceState) {
+        current_player_one_card = new CardEntry<String, Integer>(
+                savedInstanceState.getString(PLAYER_ONE_CURRENT_CARD_IMG),
+                savedInstanceState.getInt(PLAYER_ONE_CURRENT_CARD_VALUE)
+        );
+        current_player_two_card = new CardEntry<String, Integer>(
+                savedInstanceState.getString(PLAYER_TWO_CURRENT_CARD_IMG),
+                savedInstanceState.getInt(PLAYER_TWO_CURRENT_CARD_VALUE)
+        );
+
+        refreshCardView(current_player_one_card.getKey(), current_player_two_card.getKey());
     }
 
     private void getScoresFromInstance(Bundle savedInstanceState) {
@@ -93,22 +126,43 @@ public class Game_Activity extends AppCompatActivity {
     }
 
     private void nextRound() {
-        CardEntry<String, Integer> p1 = player1_stack.pop();
-        CardEntry<String, Integer> p2 = player2_stack.pop();
+        current_player_one_card = player1_stack.pop();
+        current_player_two_card = player2_stack.pop();
 
-        refreshCardView(p1.getKey(), p2.getKey());
+        refreshCardView(current_player_one_card.getKey(), current_player_two_card.getKey());
 
-        checkWinner(p1.getValue(), p2.getValue());
+        checkWinner(current_player_one_card.getValue(), current_player_two_card.getValue());
 
         refreshScoreView();
 
         if (player1_stack.isEmpty() || player2_stack.isEmpty())
         {
-            Intent winnerView = new Intent(Game_Activity.this, Winner_Activity.class);
-            winnerView.putExtra("winner", this.winner);
-            Game_Activity.this.startActivity(winnerView);
+            if (player_one_score == player_two_score){
+                createGameStacks();
+            }else {
+                int drawable_id;
+
+                switch (this.winner){
+                    case 1:
+                        drawable_id = this.getResources().getIdentifier("black_cat", "drawable", this.getPackageName());
+                        openWinnerView(player_one_score, drawable_id);
+                        break;
+                    case 2:
+                        drawable_id = this.getResources().getIdentifier("pirate", "drawable", this.getPackageName());
+                        openWinnerView(player_two_score, drawable_id);
+                        break;
+                }
+
+            }
         }
 
+    }
+
+    private void openWinnerView(int winner_score, int drawable_id) {
+        Intent winnerView = new Intent(Game_Activity.this, Winner_Activity.class);
+        winnerView.putExtra("winner_score", winner_score);
+        winnerView.putExtra("winner_image_id", drawable_id);
+        Game_Activity.this.startActivity(winnerView);
     }
 
     private void refreshCardView(String p1_card_image, String p2_card_image) {
@@ -143,7 +197,6 @@ public class Game_Activity extends AppCompatActivity {
     }
 
     private void createGameStacks() {
-        int cardSize = 52;
         int card_value;
         int card_shape;
         boolean player_card_flag = true;
@@ -152,37 +205,35 @@ public class Game_Activity extends AppCompatActivity {
         /*
         Fill overall stack with all the possible cards.
          */
-        while(cardSize != 0){
-            card_shape = random.nextInt(4 - 1) + 1;
-            card_value = random.nextInt(14 - 2) + 2;
-
-            String card_key = "poker_card_" + CardShapesEnum.valueOf(card_shape).toString().toLowerCase() + "_" + card_value;
-            CardEntry<String, Integer> card_entry = new CardEntry<String, Integer>(card_key, card_value);
-            if (all_card_stack.search(card_entry) == -1){
-                all_card_stack.push(card_entry);
-                cardSize--;
+        for(card_shape=1; card_shape<5; card_shape++)
+        {
+            for(card_value=2; card_value<15; card_value++){
+                String card_key = "poker_card_" + CardShapesEnum.valueOf(card_shape).toString().toLowerCase() + "_" + card_value;
+                CardEntry<String, Integer> card_entry = new CardEntry<String, Integer>(card_key, card_value);
+                all_card_stack.add(card_entry);
             }
         }
 
+        Collections.shuffle(all_card_stack);
+
         // Divide the cards between the players.
-        while(!all_card_stack.empty()){
+        while(all_card_stack.size() != 0){
             if(player_card_flag){
-                insertCardToPlayerOneStack(all_card_stack.pop());
+                insertCardToPlayerOneStack(all_card_stack.get(0));
                 player_card_flag = false;
             }else{
-                insertCardToPlayerTwoStack(all_card_stack.pop());
+                insertCardToPlayerTwoStack(all_card_stack.get(0));
                 player_card_flag = true;
             }
+            all_card_stack.remove(0);
         }
     }
 
     private void insertCardToPlayerOneStack(CardEntry<String, Integer> card_entry) {
-        Log.println(Log.DEBUG, "player_1_card_info", "" + card_entry.getKey());
         player1_stack.push(card_entry);
     }
 
     private void insertCardToPlayerTwoStack(CardEntry<String, Integer> card_entry) {
-        Log.println(Log.DEBUG, "player_2_card_info", "" + card_entry.getKey());
         player2_stack.push(card_entry);
     }
 }

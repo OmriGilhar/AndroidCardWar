@@ -35,7 +35,7 @@
                 android:gravity="center"
                 android:padding="8dp"
                 android:text="@string/menu_title"
-                android:textColor="@color/menuGreen"
+                android:textColor="@color/menuTitle"
                 android:textSize="60sp" />
 
             <ImageView
@@ -51,18 +51,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/menu_start"
-            android:background="@color/menuGreen"
+            android:layout_marginVertical="20dp"
+            android:layout_marginHorizontal="20dp"
+            android:background="@color/menuButtons"
             android:textColor="@color/black"/>
-
-        <Button
-            android:id="@+id/about_BTN_menu"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:background="@color/menuGreen"
-            android:text="@string/menu_about"
-            android:textColor="@color/black"/>
-
 
     </LinearLayout>
 
