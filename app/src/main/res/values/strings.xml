@@ -14,4 +14,6 @@
     <string name="winner_title">!! WINNER !!</string>
     <string name="winner_score_title">Your Score </string>
 
+    <string name="path_to_default_card">card_back</string>
+
 </resources>
