@@ -8,7 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-public class MenuActivity extends AppCompatActivity {
+public class Menu_Activity extends AppCompatActivity {
 
     private Button start_game_btn;
     private Button about_btn;
@@ -49,7 +49,7 @@ public class MenuActivity extends AppCompatActivity {
 
     private void openGameView() {
         Log.println(Log.DEBUG, "menu", "Open game");
-        Intent gameIntent= new Intent(MenuActivity.this, Game_Activity.class);
-        MenuActivity.this.startActivity(gameIntent);
+        Intent gameIntent= new Intent(Menu_Activity.this, Game_Activity.class);
+        Menu_Activity.this.startActivity(gameIntent);
     }
 }
