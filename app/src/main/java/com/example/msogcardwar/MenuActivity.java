@@ -2,6 +2,7 @@ package com.example.msogcardwar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -48,5 +49,7 @@ public class MenuActivity extends AppCompatActivity {
 
     private void openGameView() {
         Log.println(Log.DEBUG, "menu", "Open game");
+        Intent gameIntent= new Intent(MenuActivity.this, Game_Activity.class);
+        MenuActivity.this.startActivity(gameIntent);
     }
 }
