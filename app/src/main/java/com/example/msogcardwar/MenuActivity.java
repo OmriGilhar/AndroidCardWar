@@ -3,6 +3,7 @@ package com.example.msogcardwar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -42,8 +43,10 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private void openAboutView() {
+        Log.println(Log.DEBUG, "menu", "Open About");
     }
 
     private void openGameView() {
+        Log.println(Log.DEBUG, "menu", "Open game");
     }
 }
