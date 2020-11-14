@@ -12,7 +12,7 @@ public enum CardShapesEnum {
 
     private final int cardShapesEnum;
 
-    private static final Map<Integer, CardShapesEnum> map = new HashMap<Integer, CardShapesEnum>();
+    private static final Map<Integer, CardShapesEnum> map = new HashMap<>();
 
     static {
         for (CardShapesEnum legEnum : CardShapesEnum.values()) {
@@ -20,7 +20,7 @@ public enum CardShapesEnum {
         }
     }
 
-    private CardShapesEnum(final int leg) {
+    CardShapesEnum(final int leg) {
         cardShapesEnum = leg;
     }
 

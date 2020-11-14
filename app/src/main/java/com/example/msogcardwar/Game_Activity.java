@@ -5,19 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Stack;
-import java.util.Random;
 
 public class Game_Activity extends AppCompatActivity {
     private final String PLAYER_ONE_SCORE = "P1_SCORE";
@@ -89,11 +84,11 @@ public class Game_Activity extends AppCompatActivity {
     }
 
     private void getPlayersCardFromInstance(Bundle savedInstanceState) {
-        current_player_one_card = new CardEntry<String, Integer>(
+        current_player_one_card = new CardEntry<>(
                 savedInstanceState.getString(PLAYER_ONE_CURRENT_CARD_IMG),
                 savedInstanceState.getInt(PLAYER_ONE_CURRENT_CARD_VALUE)
         );
-        current_player_two_card = new CardEntry<String, Integer>(
+        current_player_two_card = new CardEntry<>(
                 savedInstanceState.getString(PLAYER_TWO_CURRENT_CARD_IMG),
                 savedInstanceState.getInt(PLAYER_TWO_CURRENT_CARD_VALUE)
         );
@@ -108,9 +103,16 @@ public class Game_Activity extends AppCompatActivity {
         refreshScoreView();
     }
 
+    @SuppressWarnings("unchecked")
     private void getStacksFromInstance(Bundle savedInstanceState) {
-        player1_stack = (Stack<CardEntry<String,Integer>>)savedInstanceState.getSerializable(PLAYER_ONE_STACK);
-        player2_stack = (Stack<CardEntry<String,Integer>>)savedInstanceState.getSerializable(PLAYER_TWO_STACK);
+        try{
+
+            player1_stack = (Stack<CardEntry<String,Integer>>)savedInstanceState.getSerializable(PLAYER_ONE_STACK);
+            player2_stack = (Stack<CardEntry<String,Integer>>)savedInstanceState.getSerializable(PLAYER_TWO_STACK);
+        } catch (ClassCastException e){
+            Log.println(Log.ERROR, "Casting", e.toString());
+        }
+
     }
 
     private void findViews() {
@@ -127,12 +129,7 @@ public class Game_Activity extends AppCompatActivity {
         refreshScoreView();
         createGameStacks();
 
-        game_btn_play.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                nextRound();
-            }
-        });
+        game_btn_play.setOnClickListener(v -> nextRound());
     }
 
     private void nextRound() {
@@ -210,7 +207,6 @@ public class Game_Activity extends AppCompatActivity {
         int card_value;
         int card_shape;
         boolean player_card_flag = true;
-        Random random = new Random();
 
         /*
         Fill overall stack with all the possible cards.
@@ -219,7 +215,7 @@ public class Game_Activity extends AppCompatActivity {
         {
             for(card_value=2; card_value<15; card_value++){
                 String card_key = "poker_card_" + CardShapesEnum.valueOf(card_shape).toString().toLowerCase() + "_" + card_value;
-                CardEntry<String, Integer> card_entry = new CardEntry<String, Integer>(card_key, card_value);
+                CardEntry<String, Integer> card_entry = new CardEntry<>(card_key, card_value);
                 all_card_stack.add(card_entry);
             }
         }
