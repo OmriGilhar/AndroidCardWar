@@ -36,6 +36,15 @@
             android:text="Score: 11"
             android:textColor="@color/white"
             android:textSize="30sp"/>
+        <Button
+            android:id="@+id/startNew_Game_BTN"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/start_new_game"
+            android:layout_marginVertical="20dp"
+            android:layout_marginHorizontal="20dp"
+            android:background="@color/menuButtons"
+            android:textColor="@color/black"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
