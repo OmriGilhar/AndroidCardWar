@@ -127,7 +127,7 @@ public class Game_Activity extends AppCompatActivity {
         game_img_card_player1.setImageResource(R.drawable.card_back);
         game_img_card_player2.setImageResource(R.drawable.card_back);
         refreshScoreView();
-        createGameStacks();
+        createGameStacks(false);
 
         game_btn_play.setOnClickListener(v -> nextRound());
     }
@@ -145,7 +145,7 @@ public class Game_Activity extends AppCompatActivity {
         if (player1_stack.isEmpty() || player2_stack.isEmpty())
         {
             if (player_one_score == player_two_score){
-                createGameStacks();
+                createGameStacks(true);
             }else {
                 int drawable_id;
 
@@ -203,9 +203,16 @@ public class Game_Activity extends AppCompatActivity {
         game_lbl_scorePlayer2.setText(String.valueOf(player_two_score));
     }
 
-    private void createGameStacks() {
+    /*
+    * This Function is responsible to divide the cards between the two players
+    * Bool input:
+    * False - for regular game (all cards)
+    * True - in case of tie, give 5 cards to each player
+    * */
+    private void createGameStacks(boolean isTie) {
         int card_value;
         int card_shape;
+        int i=0;
         boolean player_card_flag = true;
 
         /*
@@ -223,15 +230,19 @@ public class Game_Activity extends AppCompatActivity {
         Collections.shuffle(all_card_stack);
 
         // Divide the cards between the players.
-        while(all_card_stack.size() != 0){
-            if(player_card_flag){
-                insertCardToPlayerOneStack(all_card_stack.get(0));
-                player_card_flag = false;
-            }else{
-                insertCardToPlayerTwoStack(all_card_stack.get(0));
-                player_card_flag = true;
-            }
+        // In case of tie, give only 5 cards.
+        while(all_card_stack.size() != 0 && i < 5){
+            // Add card to player one stack and remove it from overall stack
+            insertCardToPlayerOneStack(all_card_stack.get(0));
             all_card_stack.remove(0);
+
+            // Add card to player two stack and remove it from overall stack
+            insertCardToPlayerTwoStack(all_card_stack.get(0));
+            all_card_stack.remove(0);
+
+            if(isTie)
+                i++;
+
         }
     }
 
