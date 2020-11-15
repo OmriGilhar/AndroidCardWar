@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageButton;
@@ -29,6 +30,7 @@ public class Game_Activity extends AppCompatActivity {
     private TextView game_lbl_scorePlayer2;
     private ImageView game_img_card_player2;
     private ImageButton game_btn_play;
+    private MediaPlayer backgroundSong;
     private final ArrayList<CardEntry<String, Integer>> all_card_stack = new ArrayList<>();
     private Stack<CardEntry<String, Integer>> player1_stack = new Stack<>();
     private Stack<CardEntry<String, Integer>> player2_stack = new Stack<>();
@@ -45,6 +47,8 @@ public class Game_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_activity);
+        backgroundSong = MediaPlayer.create(Game_Activity.this, R.raw.loyalty_freak_music10the_witch_are_going_magical);
+        backgroundSong.start();
 
         findViews();
         initViews();
@@ -166,6 +170,7 @@ public class Game_Activity extends AppCompatActivity {
     }
 
     private void openWinnerView(int winner_score, int drawable_id) {
+        backgroundSong.release();
         Intent winnerView = new Intent(Game_Activity.this, Winner_Activity.class);
         winnerView.putExtra("winner_score", winner_score);
         winnerView.putExtra("winner_image_id", drawable_id);
