@@ -17,8 +17,6 @@ public class Menu_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu_activity);
-        backgroundSong = MediaPlayer.create(Menu_Activity.this, R.raw.loyalty_freak_music04hello_regan);
-        backgroundSong.start();
 
         find_views();
         init_views();
@@ -30,12 +28,19 @@ public class Menu_Activity extends AppCompatActivity {
 
     private void init_views() {
         start_game_btn.setOnClickListener(v -> openGameView());
+        backgroundSong = MediaPlayer.create(Menu_Activity.this, R.raw.loyalty_freak_music04hello_regan);
+        backgroundSong.start();
     }
 
     private void openGameView() {
         backgroundSong.release();
-        Log.println(Log.DEBUG, "menu", "Open game");
         Intent gameIntent= new Intent(Menu_Activity.this, Game_Activity.class);
         Menu_Activity.this.startActivity(gameIntent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        backgroundSong.release();
     }
 }

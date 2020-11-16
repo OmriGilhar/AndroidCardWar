@@ -47,8 +47,6 @@ public class Game_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_activity);
-        backgroundSong = MediaPlayer.create(Game_Activity.this, R.raw.loyalty_freak_music10the_witch_are_going_magical);
-        backgroundSong.start();
 
         findViews();
         initViews();
@@ -132,6 +130,9 @@ public class Game_Activity extends AppCompatActivity {
         game_img_card_player2.setImageResource(R.drawable.card_back);
         refreshScoreView();
         createGameStacks(false);
+
+        backgroundSong = MediaPlayer.create(Game_Activity.this, R.raw.loyalty_freak_music10the_witch_are_going_magical);
+        backgroundSong.start();
 
         game_btn_play.setOnClickListener(v -> nextRound());
     }
@@ -218,8 +219,6 @@ public class Game_Activity extends AppCompatActivity {
         int card_value;
         int card_shape;
         int i=0;
-        boolean player_card_flag = true;
-
         /*
         Fill overall stack with all the possible cards.
          */
@@ -234,8 +233,12 @@ public class Game_Activity extends AppCompatActivity {
 
         Collections.shuffle(all_card_stack);
 
-        // Divide the cards between the players.
-        // In case of tie, give only 5 cards.
+        /*
+        * Divide the cards between the players.
+        * We divide the cards equally between the players (even amount of cards) fo each time we
+        * add a card to a player we remove the card from the overall stack.
+        * In case of tie, give only 5 cards.
+         * */
         while(all_card_stack.size() != 0 && i < 5){
             // Add card to player one stack and remove it from overall stack
             insertCardToPlayerOneStack(all_card_stack.get(0));
@@ -258,4 +261,13 @@ public class Game_Activity extends AppCompatActivity {
     private void insertCardToPlayerTwoStack(CardEntry<String, Integer> card_entry) {
         player2_stack.push(card_entry);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        backgroundSong.release();
+        Intent gameIntent= new Intent(Game_Activity.this, Menu_Activity.class);
+        Game_Activity.this.startActivity(gameIntent);
+    }
+
 }

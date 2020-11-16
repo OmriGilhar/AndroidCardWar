@@ -26,8 +26,6 @@ public class Winner_Activity extends AppCompatActivity {
         setContentView(R.layout.winner_activity);
         this.winner_score = getIntent().getIntExtra("winner_score", -1);
         this.winner_img_id = getIntent().getIntExtra("winner_image_id", -1);
-        backgroundSong = MediaPlayer.create(Winner_Activity.this, R.raw.loyalty_freak_music04hello_regan);
-        backgroundSong.start();
 
         findViews();
         initViews();
@@ -38,7 +36,7 @@ public class Winner_Activity extends AppCompatActivity {
         winner_lbl_winner_name = findViewById(R.id.winner_LBL_winner_title);
         winner_img_winner_logo = findViewById(R.id.winner_IMG_winner);
         winner_lbl_winner_score = findViewById(R.id.winner_LBL_description);
-        start_game_btn = findViewById(R.id.startNew_Game_BTN);
+        start_game_btn = findViewById(R.id.winner_BTN_startNewGame);
     }
 
     private void initViews() {
@@ -49,13 +47,24 @@ public class Winner_Activity extends AppCompatActivity {
         winner_img_winner_logo.setImageResource(winner_img_id);
         start_game_btn.setOnClickListener(v -> openGameView());
 
+        backgroundSong = MediaPlayer.create(Winner_Activity.this, R.raw.loyalty_freak_music04hello_regan);
+        backgroundSong.start();
+
 
     }
 
     private void openGameView() {
         backgroundSong.release();
-        Log.println(Log.DEBUG, "menu", "Open game");
         Intent gameIntent= new Intent(Winner_Activity.this, Game_Activity.class);
         Winner_Activity.this.startActivity(gameIntent);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        backgroundSong.release();
+        Intent gameIntent= new Intent(Winner_Activity.this, Menu_Activity.class);
+        Winner_Activity.this.startActivity(gameIntent);
+    }
+
 }
