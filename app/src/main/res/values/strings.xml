@@ -13,6 +13,7 @@
 
     <string name="winner_title">!! WINNER !!</string>
     <string name="winner_score_title">Your Score </string>
+    <string name="winner_image_description">Winner Card Image</string>
     <string name="winner_start_new_game">Start a New Game </string>
 
     <string name="path_to_default_card">card_back</string>
