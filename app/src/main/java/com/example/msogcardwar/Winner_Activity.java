@@ -3,9 +3,7 @@ package com.example.msogcardwar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,7 +16,6 @@ public class Winner_Activity extends AppCompatActivity {
     private int winner_score;
     private int winner_img_id;
     private Button start_game_btn;
-    private MediaPlayer backgroundSong;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,21 +37,14 @@ public class Winner_Activity extends AppCompatActivity {
     }
 
     private void initViews() {
-        String winner_score_title = "Your Score is :" +this.winner_score;
-        Log.println(Log.DEBUG, "winner", winner_score_title);
+        String winner_score_title = "Your Score is :" + this.winner_score;
         winner_lbl_winner_name.setText(R.string.winner_title);
         winner_lbl_winner_score.setText(winner_score_title);
         winner_img_winner_logo.setImageResource(winner_img_id);
         start_game_btn.setOnClickListener(v -> openGameView());
-
-        backgroundSong = MediaPlayer.create(Winner_Activity.this, R.raw.loyalty_freak_music04hello_regan);
-        backgroundSong.start();
-
-
     }
 
     private void openGameView() {
-        backgroundSong.release();
         Intent gameIntent= new Intent(Winner_Activity.this, Game_Activity.class);
         Winner_Activity.this.startActivity(gameIntent);
     }
@@ -62,7 +52,6 @@ public class Winner_Activity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        backgroundSong.release();
         Intent gameIntent= new Intent(Winner_Activity.this, Menu_Activity.class);
         Winner_Activity.this.startActivity(gameIntent);
     }

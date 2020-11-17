@@ -4,43 +4,22 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Stack;
 
+
 public class Game_Activity extends AppCompatActivity {
-    private final String PLAYER_ONE_SCORE = "P1_SCORE";
-    private final String PLAYER_TWO_SCORE = "P2_SCORE";
-    private final String WINNER = "WINNER";
-    private final String PLAYER_ONE_CURRENT_CARD_IMG = "P1_CARD_IMG";
-    private final String PLAYER_ONE_CURRENT_CARD_VALUE = "P1_CARD_VALUE";
-    private final String PLAYER_TWO_CURRENT_CARD_IMG = "P2_CARD_IMG";
-    private final String PLAYER_TWO_CURRENT_CARD_VALUE = "P2_CARD_VALUE";
-    private final String PLAYER_ONE_STACK = "P1_STACK";
-    private final String PLAYER_TWO_STACK = "P2_STACK";
     private TextView game_lbl_scorePlayer1;
     private ImageView game_img_card_player1;
     private TextView game_lbl_scorePlayer2;
     private ImageView game_img_card_player2;
     private ImageButton game_btn_play;
-    private MediaPlayer backgroundSong;
-    private final ArrayList<CardEntry<String, Integer>> all_card_stack = new ArrayList<>();
-    private Stack<CardEntry<String, Integer>> player1_stack = new Stack<>();
-    private Stack<CardEntry<String, Integer>> player2_stack = new Stack<>();
-
-    private CardEntry<String, Integer> current_player_one_card;
-    private CardEntry<String, Integer> current_player_two_card;
-
-    private int player_one_score = 0;
-    private int player_two_score = 0;
-    private int winner = -1;
+    private GameManager game_manager;
 
 
     @Override
@@ -61,60 +40,29 @@ public class Game_Activity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(PLAYER_ONE_STACK, player1_stack);
-        outState.putSerializable(PLAYER_TWO_STACK, player2_stack);
+        outState.putSerializable(Constants.PLAYER_ONE_STACK, game_manager.getPlayerOne().getPlayerStack());
+        outState.putSerializable(Constants.PLAYER_TWO_STACK, game_manager.getPlayerTwo().getPlayerStack());
 
         // If someone spin the phone when no card as been played yet
-        if(current_player_one_card != null ){
-            outState.putString(PLAYER_ONE_CURRENT_CARD_IMG, current_player_one_card.getKey());
-            outState.putInt(PLAYER_ONE_CURRENT_CARD_VALUE, current_player_one_card.getValue());
-            outState.putString(PLAYER_TWO_CURRENT_CARD_IMG, current_player_two_card.getKey());
-            outState.putInt(PLAYER_TWO_CURRENT_CARD_VALUE, current_player_two_card.getValue());
+        if(game_manager.getPlayerOne().getPlayerCard() != null){
+            outState.putString(Constants.PLAYER_ONE_CURRENT_CARD_IMG, game_manager.getPlayerOne().getPlayerCard().getKey());
+            outState.putInt(Constants.PLAYER_ONE_CURRENT_CARD_VALUE, game_manager.getPlayerOne().getPlayerCard().getValue());
+            outState.putString(Constants.PLAYER_TWO_CURRENT_CARD_IMG, game_manager.getPlayerTwo().getPlayerCard().getKey());
+            outState.putInt(Constants.PLAYER_TWO_CURRENT_CARD_VALUE, game_manager.getPlayerTwo().getPlayerCard().getValue());
         } else {
-            outState.putString(PLAYER_ONE_CURRENT_CARD_IMG, getResources().getString(R.string.path_to_default_card));
-            outState.putInt(PLAYER_ONE_CURRENT_CARD_VALUE, 0);
-            outState.putString(PLAYER_TWO_CURRENT_CARD_IMG, getResources().getString(R.string.path_to_default_card));
-            outState.putInt(PLAYER_TWO_CURRENT_CARD_VALUE, 0);
+            outState.putString(Constants.PLAYER_ONE_CURRENT_CARD_IMG, getResources().getString(R.string.path_to_default_card));
+            outState.putInt(Constants.PLAYER_ONE_CURRENT_CARD_VALUE, 0);
+            outState.putString(Constants.PLAYER_TWO_CURRENT_CARD_IMG, getResources().getString(R.string.path_to_default_card));
+            outState.putInt(Constants.PLAYER_TWO_CURRENT_CARD_VALUE, 0);
         }
-
-
-
-
-        outState.putInt(PLAYER_ONE_SCORE, player_one_score);
-        outState.putInt(PLAYER_TWO_SCORE, player_two_score);
-        outState.putInt(WINNER, winner);
+        outState.putInt(Constants.PLAYER_ONE_SCORE, game_manager.getPlayerOne().getPlayerScore());
+        outState.putInt(Constants.PLAYER_TWO_SCORE, game_manager.getPlayerTwo().getPlayerScore());
+        outState.putInt(Constants.WINNER, game_manager.getWinner());
     }
 
-    private void getPlayersCardFromInstance(Bundle savedInstanceState) {
-        current_player_one_card = new CardEntry<>(
-                savedInstanceState.getString(PLAYER_ONE_CURRENT_CARD_IMG),
-                savedInstanceState.getInt(PLAYER_ONE_CURRENT_CARD_VALUE)
-        );
-        current_player_two_card = new CardEntry<>(
-                savedInstanceState.getString(PLAYER_TWO_CURRENT_CARD_IMG),
-                savedInstanceState.getInt(PLAYER_TWO_CURRENT_CARD_VALUE)
-        );
-
-        refreshCardView(current_player_one_card.getKey(), current_player_two_card.getKey());
-    }
-
-    private void getScoresFromInstance(Bundle savedInstanceState) {
-        player_one_score = savedInstanceState.getInt(PLAYER_ONE_SCORE);
-        player_two_score = savedInstanceState.getInt(PLAYER_TWO_SCORE);
-        winner = savedInstanceState.getInt(WINNER);
-        refreshScoreView();
-    }
-
-    @SuppressWarnings("unchecked")
-    private void getStacksFromInstance(Bundle savedInstanceState) {
-        try{
-
-            player1_stack = (Stack<CardEntry<String,Integer>>)savedInstanceState.getSerializable(PLAYER_ONE_STACK);
-            player2_stack = (Stack<CardEntry<String,Integer>>)savedInstanceState.getSerializable(PLAYER_TWO_STACK);
-        } catch (ClassCastException e){
-            Log.println(Log.ERROR, "Casting", e.toString());
-        }
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     private void findViews() {
@@ -128,50 +76,66 @@ public class Game_Activity extends AppCompatActivity {
     private void initViews() {
         game_img_card_player1.setImageResource(R.drawable.card_back);
         game_img_card_player2.setImageResource(R.drawable.card_back);
+        game_manager = new GameManager();
         refreshScoreView();
-        createGameStacks(false);
-
-        backgroundSong = MediaPlayer.create(Game_Activity.this, R.raw.loyalty_freak_music10the_witch_are_going_magical);
-        backgroundSong.start();
+        game_manager.createGameStacks(false);
 
         game_btn_play.setOnClickListener(v -> nextRound());
     }
 
+    private void getPlayersCardFromInstance(Bundle savedInstanceState) {
+        game_manager.getPlayerOne().setPlayerCard(new CardEntry<>(
+                savedInstanceState.getString(Constants.PLAYER_ONE_CURRENT_CARD_IMG),
+                savedInstanceState.getInt(Constants.PLAYER_ONE_CURRENT_CARD_VALUE)
+        ));
+
+        game_manager.getPlayerTwo().setPlayerCard(new CardEntry<>(
+                savedInstanceState.getString(Constants.PLAYER_TWO_CURRENT_CARD_IMG),
+                savedInstanceState.getInt(Constants.PLAYER_TWO_CURRENT_CARD_VALUE)
+        ));
+
+        refreshCardView(game_manager.getPlayerOne().getPlayerCard().getKey(), game_manager.getPlayerTwo().getPlayerCard().getKey());
+    }
+
+    private void getScoresFromInstance(Bundle savedInstanceState) {
+        game_manager.getPlayerOne().setPlayerScore(savedInstanceState.getInt(Constants.PLAYER_ONE_SCORE));
+        game_manager.getPlayerTwo().setPlayerScore(savedInstanceState.getInt(Constants.PLAYER_TWO_SCORE));
+        game_manager.setWinner(savedInstanceState.getInt(Constants.WINNER));
+        refreshScoreView();
+    }
+
+    @SuppressWarnings("unchecked")
+    private void getStacksFromInstance(Bundle savedInstanceState) {
+        try{
+            game_manager.getPlayerOne().setPlayerStack((Stack<CardEntry<String,Integer>>)savedInstanceState.getSerializable(Constants.PLAYER_ONE_STACK));
+            game_manager.getPlayerTwo().setPlayerStack((Stack<CardEntry<String,Integer>>)savedInstanceState.getSerializable(Constants.PLAYER_TWO_STACK));
+        } catch (ClassCastException e){
+            Log.println(Log.ERROR, "Casting", e.toString());
+        }
+
+    }
+
     private void nextRound() {
-        current_player_one_card = player1_stack.pop();
-        current_player_two_card = player2_stack.pop();
-
-        refreshCardView(current_player_one_card.getKey(), current_player_two_card.getKey());
-
-        checkWinner(current_player_one_card.getValue(), current_player_two_card.getValue());
-
+        int drawable_id;
+        game_manager.pullNewCards();
+        game_manager.updateWinner();
+        refreshCardView(game_manager.getPlayerOne().getPlayerCard().getKey(), game_manager.getPlayerTwo().getPlayerCard().getKey());
         refreshScoreView();
 
-        if (player1_stack.isEmpty() || player2_stack.isEmpty())
-        {
-            if (player_one_score == player_two_score){
-                createGameStacks(true);
-            }else {
-                int drawable_id;
-
-                switch (this.winner){
-                    case 1:
-                        drawable_id = this.getResources().getIdentifier("black_cat", "drawable", this.getPackageName());
-                        openWinnerView(player_one_score, drawable_id);
-                        break;
-                    case 2:
-                        drawable_id = this.getResources().getIdentifier("pirate", "drawable", this.getPackageName());
-                        openWinnerView(player_two_score, drawable_id);
-                        break;
-                }
-
-            }
+        switch(game_manager.getGameState()){
+            case 1:
+                drawable_id = this.getResources().getIdentifier("black_cat", "drawable", this.getPackageName());
+                openWinnerView(game_manager.getPlayerOne().getPlayerScore(), drawable_id);
+                break;
+            case 2:
+                drawable_id = this.getResources().getIdentifier("pirate", "drawable", this.getPackageName());
+                openWinnerView(game_manager.getPlayerTwo().getPlayerScore(), drawable_id);
+                break;
         }
 
     }
 
     private void openWinnerView(int winner_score, int drawable_id) {
-        backgroundSong.release();
         Intent winnerView = new Intent(Game_Activity.this, Winner_Activity.class);
         winnerView.putExtra("winner_score", winner_score);
         winnerView.putExtra("winner_image_id", drawable_id);
@@ -187,87 +151,9 @@ public class Game_Activity extends AppCompatActivity {
 
     }
 
-    private void checkWinner(Integer p1_card_value, Integer p2_card_value) {
-        if(p1_card_value > p2_card_value){
-            player_one_score++;
-        }else if(p2_card_value > p1_card_value){
-            player_two_score++;
-        }
-
-        if (player_one_score > player_two_score){
-            winner = 1;
-        } else if(player_two_score > player_one_score){
-            winner = 2;
-        }
-        else{
-            winner = 0;
-        }
-    }
-
     private void refreshScoreView() {
-        game_lbl_scorePlayer1.setText(String.valueOf(player_one_score));
-        game_lbl_scorePlayer2.setText(String.valueOf(player_two_score));
-    }
-
-    /*
-    * This Function is responsible to divide the cards between the two players
-    * Bool input:
-    * False - for regular game (all cards)
-    * True - in case of tie, give 5 cards to each player
-    * */
-    private void createGameStacks(boolean isTie) {
-        int card_value;
-        int card_shape;
-        int i=0;
-        /*
-        Fill overall stack with all the possible cards.
-         */
-        for(card_shape=1; card_shape<5; card_shape++)
-        {
-            for(card_value=2; card_value<15; card_value++){
-                String card_key = "poker_card_" + CardShapesEnum.valueOf(card_shape).toString().toLowerCase() + "_" + card_value;
-                CardEntry<String, Integer> card_entry = new CardEntry<>(card_key, card_value);
-                all_card_stack.add(card_entry);
-            }
-        }
-
-        Collections.shuffle(all_card_stack);
-
-        /*
-        * Divide the cards between the players.
-        * We divide the cards equally between the players (even amount of cards) fo each time we
-        * add a card to a player we remove the card from the overall stack.
-        * In case of tie, give only 5 cards.
-         * */
-        while(all_card_stack.size() != 0 && i < 5){
-            // Add card to player one stack and remove it from overall stack
-            insertCardToPlayerOneStack(all_card_stack.get(0));
-            all_card_stack.remove(0);
-
-            // Add card to player two stack and remove it from overall stack
-            insertCardToPlayerTwoStack(all_card_stack.get(0));
-            all_card_stack.remove(0);
-
-            if(isTie)
-                i++;
-
-        }
-    }
-
-    private void insertCardToPlayerOneStack(CardEntry<String, Integer> card_entry) {
-        player1_stack.push(card_entry);
-    }
-
-    private void insertCardToPlayerTwoStack(CardEntry<String, Integer> card_entry) {
-        player2_stack.push(card_entry);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        backgroundSong.release();
-        Intent gameIntent= new Intent(Game_Activity.this, Menu_Activity.class);
-        Game_Activity.this.startActivity(gameIntent);
+        game_lbl_scorePlayer1.setText(String.valueOf(game_manager.getPlayerOne().getPlayerScore()));
+        game_lbl_scorePlayer2.setText(String.valueOf(game_manager.getPlayerTwo().getPlayerScore()));
     }
 
 }

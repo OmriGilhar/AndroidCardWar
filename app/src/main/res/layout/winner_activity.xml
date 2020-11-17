@@ -17,7 +17,6 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Winner!!!"
             android:textColor="@color/white"
             android:textSize="50sp"/>
 
@@ -26,14 +25,14 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:src="@drawable/monster"/>
+            android:src="@drawable/monster"
+            android:contentDescription="@string/winner_image_description" />
 
         <TextView
             android:id="@+id/winner_LBL_description"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="Score: 11"
             android:textColor="@color/white"
             android:textSize="30sp"/>
         <Button

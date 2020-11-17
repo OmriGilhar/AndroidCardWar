@@ -3,15 +3,12 @@ package com.example.msogcardwar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 
 public class Menu_Activity extends AppCompatActivity {
 
     private Button start_game_btn;
-    private MediaPlayer backgroundSong;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,12 +25,9 @@ public class Menu_Activity extends AppCompatActivity {
 
     private void init_views() {
         start_game_btn.setOnClickListener(v -> openGameView());
-        backgroundSong = MediaPlayer.create(Menu_Activity.this, R.raw.loyalty_freak_music04hello_regan);
-        backgroundSong.start();
     }
 
     private void openGameView() {
-        backgroundSong.release();
         Intent gameIntent= new Intent(Menu_Activity.this, Game_Activity.class);
         Menu_Activity.this.startActivity(gameIntent);
     }
@@ -41,6 +35,5 @@ public class Menu_Activity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        backgroundSong.release();
     }
 }
