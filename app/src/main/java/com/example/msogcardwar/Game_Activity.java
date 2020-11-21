@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageButton;
@@ -20,6 +21,7 @@ public class Game_Activity extends AppCompatActivity {
     private ImageView game_img_card_player2;
     private ImageButton game_btn_play;
     private GameManager game_manager;
+    private MediaPlayer backgroundMusic;
 
 
     @Override
@@ -63,6 +65,7 @@ public class Game_Activity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        backgroundMusic.release();
     }
 
     private void findViews() {
@@ -79,6 +82,10 @@ public class Game_Activity extends AppCompatActivity {
         game_manager = new GameManager();
         refreshScoreView();
         game_manager.createGameStacks(false);
+
+        backgroundMusic = MediaPlayer.create(this,
+                R.raw.loyalty_freak_music10the_witch_are_going_magical);
+        backgroundMusic.start();
 
         game_btn_play.setOnClickListener(v -> nextRound());
     }
@@ -140,6 +147,7 @@ public class Game_Activity extends AppCompatActivity {
         winnerView.putExtra("winner_score", winner_score);
         winnerView.putExtra("winner_image_id", drawable_id);
         Game_Activity.this.startActivity(winnerView);
+        backgroundMusic.release();
     }
 
     private void refreshCardView(String p1_card_image, String p2_card_image) {
@@ -155,5 +163,6 @@ public class Game_Activity extends AppCompatActivity {
         game_lbl_scorePlayer1.setText(String.valueOf(game_manager.getPlayerOne().getPlayerScore()));
         game_lbl_scorePlayer2.setText(String.valueOf(game_manager.getPlayerTwo().getPlayerScore()));
     }
+
 
 }

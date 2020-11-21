@@ -3,6 +3,7 @@ package com.example.msogcardwar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,6 +17,7 @@ public class Winner_Activity extends AppCompatActivity {
     private int winner_score;
     private int winner_img_id;
     private Button start_game_btn;
+    private MediaPlayer backgroundMusic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,18 +44,20 @@ public class Winner_Activity extends AppCompatActivity {
         winner_lbl_winner_score.setText(winner_score_title);
         winner_img_winner_logo.setImageResource(winner_img_id);
         start_game_btn.setOnClickListener(v -> openGameView());
+        backgroundMusic = MediaPlayer.create(this, R.raw.loyalty_freak_music04hello_regan);
+        backgroundMusic.start();
     }
 
     private void openGameView() {
         Intent gameIntent= new Intent(Winner_Activity.this, Game_Activity.class);
         Winner_Activity.this.startActivity(gameIntent);
+        backgroundMusic.release();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Intent gameIntent= new Intent(Winner_Activity.this, Menu_Activity.class);
-        Winner_Activity.this.startActivity(gameIntent);
+        backgroundMusic.release();
     }
 
 }
