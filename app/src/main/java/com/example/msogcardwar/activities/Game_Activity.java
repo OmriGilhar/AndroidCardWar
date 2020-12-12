@@ -1,4 +1,4 @@
-package com.example.msogcardwar;
+package com.example.msogcardwar.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +10,11 @@ import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.msogcardwar.gamelogic.CardEntry;
+import com.example.msogcardwar.gamelogic.Constants;
+import com.example.msogcardwar.gamelogic.GameManager;
+import com.example.msogcardwar.R;
 
 import java.util.Stack;
 

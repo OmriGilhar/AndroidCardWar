@@ -1,4 +1,4 @@
-package com.example.msogcardwar;
+package com.example.msogcardwar.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.msogcardwar.R;
 
 public class Winner_Activity extends AppCompatActivity {
 

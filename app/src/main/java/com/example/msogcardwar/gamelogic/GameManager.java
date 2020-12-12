@@ -1,4 +1,4 @@
-package com.example.msogcardwar;
+package com.example.msogcardwar.gamelogic;
 
 import java.util.ArrayList;
 import java.util.Collections;

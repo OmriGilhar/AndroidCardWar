@@ -1,4 +1,4 @@
-package com.example.msogcardwar;
+package com.example.msogcardwar.gamelogic;
 
 public final class Constants {
     public static final String PLAYER_ONE_SCORE = "P1_SCORE";

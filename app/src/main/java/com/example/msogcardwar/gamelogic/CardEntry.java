@@ -1,4 +1,4 @@
-package com.example.msogcardwar;
+package com.example.msogcardwar.gamelogic;
 import java.util.HashMap;
 
 public class CardEntry<String, integer> implements HashMap.Entry<String, integer> {
