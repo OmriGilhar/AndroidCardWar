@@ -4,11 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.CountDownTimer;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.msogcardwar.gamelogic.CardEntry;
@@ -27,6 +29,9 @@ public class Game_Activity extends AppCompatActivity {
     private ImageButton game_btn_play;
     private GameManager game_manager;
     private MediaPlayer backgroundMusic;
+    private ProgressBar game_PB_Timer;
+    private MyCountDownTimer myCountDownTimer;
+    private Boolean isGameActive = true;
 
 
     @Override
@@ -79,6 +84,7 @@ public class Game_Activity extends AppCompatActivity {
         game_lbl_scorePlayer2 = findViewById(R.id.game_LBL_scorePlayer2);
         game_img_card_player2 = findViewById(R.id.game_IMG_card_player2);
         game_btn_play = findViewById(R.id.game_BTN_play);
+        game_PB_Timer = findViewById(R.id.game_PB_Timer);
     }
 
     private void initViews() {
@@ -91,9 +97,34 @@ public class Game_Activity extends AppCompatActivity {
         backgroundMusic = MediaPlayer.create(this,
                 R.raw.loyalty_freak_music10the_witch_are_going_magical);
         backgroundMusic.start();
+        startGameTimer();
 
         game_btn_play.setOnClickListener(v -> nextRound());
     }
+
+
+    private void startGameTimer(){
+        myCountDownTimer = new MyCountDownTimer(5000, 1000);
+        myCountDownTimer.start();
+    }
+
+    public class MyCountDownTimer extends CountDownTimer {
+        public MyCountDownTimer(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            int progress = (int) (millisUntilFinished/50);
+            Log.println(Log.DEBUG, "kaka", "----------");
+            game_PB_Timer.setProgress(game_PB_Timer.getMax()-progress);
+        }
+        @Override
+        public void onFinish() {
+            if (isGameActive) nextRound();
+        }
+    }
+
 
     private void getPlayersCardFromInstance(Bundle savedInstanceState) {
         game_manager.getPlayerOne().setPlayerCard(new CardEntry<>(
@@ -129,6 +160,7 @@ public class Game_Activity extends AppCompatActivity {
 
     private void nextRound() {
         int drawable_id;
+        myCountDownTimer.cancel();
         game_manager.pullNewCards();
         game_manager.updateWinner();
         refreshCardView(game_manager.getPlayerOne().getPlayerCard().getKey(), game_manager.getPlayerTwo().getPlayerCard().getKey());
@@ -145,9 +177,11 @@ public class Game_Activity extends AppCompatActivity {
                 break;
         }
 
+        myCountDownTimer.start();
     }
 
     private void openWinnerView(int winner_score, int drawable_id) {
+        isGameActive = false;
         Intent winnerView = new Intent(Game_Activity.this, Winner_Activity.class);
         winnerView.putExtra("winner_score", winner_score);
         winnerView.putExtra("winner_image_id", drawable_id);

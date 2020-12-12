@@ -51,6 +51,18 @@
             android:gravity="center"
             android:orientation="vertical">
 
+            <ProgressBar
+                android:id="@+id/game_PB_Timer"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:scaleY="4"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:max="100"
+                android:progress="0"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -58,6 +70,7 @@
                 android:orientation="horizontal"
                 android:gravity="center"
                 tools:ignore="NestedWeights">
+
 
 
                 <ImageView
@@ -125,6 +138,7 @@
             </LinearLayout>
 
         </LinearLayout>
+
     </LinearLayout>
 
 
