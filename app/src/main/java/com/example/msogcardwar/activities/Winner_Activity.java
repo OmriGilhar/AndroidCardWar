@@ -19,6 +19,7 @@ public class Winner_Activity extends AppCompatActivity {
     private int winner_score;
     private int winner_img_id;
     private Button start_game_btn;
+    private Button score_board_btn;
     private MediaPlayer backgroundMusic;
 
     @Override
@@ -38,6 +39,7 @@ public class Winner_Activity extends AppCompatActivity {
         winner_img_winner_logo = findViewById(R.id.winner_IMG_winner);
         winner_lbl_winner_score = findViewById(R.id.winner_LBL_description);
         start_game_btn = findViewById(R.id.winner_BTN_startNewGame);
+        score_board_btn = findViewById(R.id.winner_BTN_score_board);
     }
 
     private void initViews() {
@@ -46,12 +48,19 @@ public class Winner_Activity extends AppCompatActivity {
         winner_lbl_winner_score.setText(winner_score_title);
         winner_img_winner_logo.setImageResource(winner_img_id);
         start_game_btn.setOnClickListener(v -> openGameView());
+        score_board_btn.setOnClickListener(v -> openScoreboardView());
         backgroundMusic = MediaPlayer.create(this, R.raw.loyalty_freak_music04hello_regan);
         backgroundMusic.start();
     }
 
     private void openGameView() {
         Intent gameIntent= new Intent(Winner_Activity.this, Game_Activity.class);
+        Winner_Activity.this.startActivity(gameIntent);
+        backgroundMusic.release();
+    }
+
+    private void openScoreboardView() {
+        Intent gameIntent= new Intent(Winner_Activity.this, Scoreboard_Activity.class);
         Winner_Activity.this.startActivity(gameIntent);
         backgroundMusic.release();
     }

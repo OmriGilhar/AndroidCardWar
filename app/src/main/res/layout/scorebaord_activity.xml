@@ -18,17 +18,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:padding="8dp"
+            android:layout_weight="0.25"
+            android:padding="3dp"
             android:text="@string/sb_title"
             android:textColor="@color/menuTitle"
-            android:textSize="60sp" />
+            android:textSize="60sp"/>
 
         <FrameLayout
             android:id="@+id/sb_LAY_sb_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_margin="24dp"
+            android:layout_weight="0.75"
+            android:layout_margin="10dp"
             android:background="#454545"
             >
 
@@ -38,13 +39,20 @@
             android:id="@+id/sb_LAY_location"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_margin="24dp"
+            android:layout_weight="0.75"
+            android:layout_margin="10dp"
             android:background="#454545"
             >
 
         </FrameLayout>
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.75"
+            android:layout_margin="10dp"
+            android:text="@string/sb_main_menu"
+            />
     </LinearLayout>
 
 </RelativeLayout>
