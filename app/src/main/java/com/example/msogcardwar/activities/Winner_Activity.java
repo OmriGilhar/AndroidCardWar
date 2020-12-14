@@ -3,6 +3,10 @@ package com.example.msogcardwar.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.widget.Button;
@@ -10,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.msogcardwar.R;
+import com.example.msogcardwar.gamelogic.Winner;
+
 
 public class Winner_Activity extends AppCompatActivity {
 
@@ -21,6 +27,9 @@ public class Winner_Activity extends AppCompatActivity {
     private Button start_game_btn;
     private Button score_board_btn;
     private MediaPlayer backgroundMusic;
+    private SharedPreferences mPrefs;
+    private String json;
+    private Winner winner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +40,6 @@ public class Winner_Activity extends AppCompatActivity {
 
         findViews();
         initViews();
-
     }
 
     private void findViews() {
@@ -51,6 +59,7 @@ public class Winner_Activity extends AppCompatActivity {
         score_board_btn.setOnClickListener(v -> openScoreboardView());
         backgroundMusic = MediaPlayer.create(this, R.raw.loyalty_freak_music04hello_regan);
         backgroundMusic.start();
+        //saveWinner(winner_score_title, winner_img_id, 10);
     }
 
     private void openGameView() {
@@ -70,5 +79,4 @@ public class Winner_Activity extends AppCompatActivity {
         super.onDestroy();
         backgroundMusic.release();
     }
-
 }
